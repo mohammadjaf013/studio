@@ -40,21 +40,23 @@ const WinPredictPage: React.FC = () => {
   ];
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-semibold mb-4">WinPredict Mini</h1>
-      {!userData ? (
-        <TelegramAuth onAuthSuccess={handleAuthSuccess} onAuthError={handleAuthError} />
-      ) : (
-        <>
-          <p className="mb-4">
-            Welcome, {userData.first_name} {userData.last_name}!
-          </p>
-          <Wallet userId={userData.id} />
-          <PredictionContest contestId="current_contest" onPredict={handlePredict} />
-          <Insights userId={userData.id} predictionHistory={predictionHistory} />
-        </>
-      )}
-      {authError && <p className="text-red-500">Authentication Error: {authError}</p>}
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-background">
+      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+        <h1 className="text-3xl font-bold mb-4 text-primary">WinPredict Mini</h1>
+        {!userData ? (
+          <TelegramAuth onAuthSuccess={handleAuthSuccess} onAuthError={handleAuthError} />
+        ) : (
+          <div className="w-full max-w-md">
+            <p className="mb-4 text-lg">
+              Welcome, {userData.first_name} {userData.last_name}!
+            </p>
+            <Wallet userId={userData.id} />
+            <PredictionContest contestId="current_contest" onPredict={handlePredict} />
+            <Insights userId={userData.id} predictionHistory={predictionHistory} />
+          </div>
+        )}
+        {authError && <p className="text-red-500">Authentication Error: {authError}</p>}
+      </main>
     </div>
   );
 };

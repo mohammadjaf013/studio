@@ -30,8 +30,8 @@ const Insights: React.FC<InsightsProps> = ({userId, predictionHistory}) => {
   }, [userId, predictionHistory]);
 
   return (
-    <div className="p-4 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Your Insights</h2>
+    <div className="p-4 rounded-lg shadow-md bg-secondary">
+      <h2 className="text-xl font-semibold mb-4 text-foreground">Your Insights</h2>
       <StateView
         loading={loading}
         error={error}
@@ -54,7 +54,7 @@ const Insights: React.FC<InsightsProps> = ({userId, predictionHistory}) => {
           description: error || 'Something went wrong.',
         }}
       >
-        {insights && <p>{insights}</p>}
+        {insights && <p className="text-muted-foreground">{insights}</p>}
       </StateView>
     </div>
   );
