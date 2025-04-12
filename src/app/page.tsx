@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import {TelegramUserData} from '@/app/auth/telegram-auth';
+import type {TelegramUserData} from '@/services/telegram';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import {Telegram} from '@telegram-apps/sdk-react';
