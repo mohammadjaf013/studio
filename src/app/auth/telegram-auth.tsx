@@ -24,37 +24,29 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({onAuthSuccess, onAuthError})
   useEffect(() => {
     if (!tg) return;
 
-    if (tg.initData === '') {
-      toast({
-        title: 'Telegram Authentication Error',
-        description: 'No initData found.',
-        variant: 'destructive',
-      });
-      onAuthError('No initData found.');
-      return;
-    }
     const authenticate = async () => {
       setLoading(true);
-      if (tg.initData === '') {
-        const mockUserData: TelegramUserData = {
-          id: 123456789,
-          first_name: 'Mock',
-          last_name: 'User',
-          username: 'mockuser',
-          language_code: 'en',
-          photo_url: 'https://example.com/photo.jpg',
-        };
-        onAuthSuccess(mockUserData);
-        toast({
-          title: 'Telegram Mock Authentication Success',
-          description: `Welcome, Mock User!`,
-        });
-      } else {
-        try {
-          const userData = await validateTelegramInitData(tg.initData);
-          onAuthSuccess(userData);
+      try {
+        let userData: TelegramUserData;
+        if (tg.initData === '') {
+          // Mock user data for testing in non-Telegram environments
+          userData = {
+            id: 123456789,
+            first_name: 'Mock',
+            last_name: 'User',
+            username: 'mockuser',
+            language_code: 'en',
+            photo_url: 'https://example.com/photo.jpg',
+          };
+          toast({
+            title: 'Telegram Mock Authentication Success',
+            description: `Welcome, Mock User!`,
+          });
+        } else {
+          userData = await validateTelegramInitData(tg.initData);
           toast({title: 'Telegram Authentication Success', description: `Welcome, ${userData.first_name}!`});
-        } catch (error: any) {
+        }
+        onAuthSuccess(userData);
       } catch (error: any) {
         console.error('Telegram Authentication Failed:', error);
         toast({
@@ -64,7 +56,6 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({onAuthSuccess, onAuthError})
         });
         onAuthError(error.message || 'Invalid initData.');
       } finally {
-      }
         setLoading(false);
       }
     };
