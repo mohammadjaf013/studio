@@ -1,6 +1,7 @@
 'use client';
 
-import TelegramAuth, {TelegramUserData} from '@/app/auth/telegram-auth';
+import dynamic from 'next/dynamic';
+import {TelegramUserData} from '@/app/auth/telegram-auth';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import {Telegram} from '@telegram-apps/sdk-react';
@@ -8,6 +9,11 @@ import {Telegram} from '@telegram-apps/sdk-react';
 interface HomeProps {
   tg: Telegram | null;
 }
+
+// Dynamically import the TelegramAuth component
+const TelegramAuth = dynamic(() => import('@/app/auth/telegram-auth'), {
+  ssr: false, // Disable server-side rendering for this component
+});
 
 export default function Home() {
   const [userData, setUserData] = useState<TelegramUserData | null>(null);
