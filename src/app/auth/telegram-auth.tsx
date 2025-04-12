@@ -63,3 +63,4 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({onAuthSuccess, onAuthError})
 };
 
 export default TelegramAuth;
+    

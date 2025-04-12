@@ -1,52 +1,40 @@
 'use client';
 
-import {useState, useEffect} from 'react';
-import {StateView} from '@/components/StateView';
+import TelegramAuth, {TelegramUserData} from '@/app/auth/telegram-auth';
+import {useRouter} from 'next/navigation';
+import {useEffect, useState} from 'react';
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<string | null>(null);
+  const [userData, setUserData] = useState<TelegramUserData | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => {
-      setLoading(false);
-      setData('Hello from WinPredict Mini!');
-    }, 1500);
-  }, []);
+    if (userData) {
+      router.push('/winpredict');
+    }
+  }, [userData, router]);
+
+  const handleAuthSuccess = (userData: TelegramUserData) => {
+    setUserData(userData);
+    setAuthError(null);
+  };
+
+  const handleAuthError = (error: string) => {
+    setAuthError(error);
+    setUserData(null);
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-background">
       <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-4xl font-bold">Welcome to WinPredict Mini!</h1>
-        <StateView
-          loading={loading}
-          error={error}
-          empty={!data}
-          data={data}
-          onRetry={() => {
-            setLoading(true);
-            setError(null);
-            setTimeout(() => {
-              setLoading(false);
-              setData('Hello from WinPredict Mini!');
-            }, 1500);
-          }}
-          loadingViewProps={{
-            title: 'Loading WinPredict Mini...',
-          }}
-          emptyViewProps={{
-            title: 'No data to display',
-            description: 'Please try again later.',
-          }}
-          errorViewProps={{
-            title: 'Failed to load WinPredict Mini',
-            description: error || 'Something went wrong.',
-          }}
-        >
-          <p className="mt-3 text-2xl">{data}</p>
-        </StateView>
+        <h1 className="text-3xl font-bold mb-4 text-primary">WinPredict Mini</h1>
+        {!userData ? (
+          <TelegramAuth onAuthSuccess={handleAuthSuccess} onAuthError={handleAuthError} />
+        ) : (
+          <p>Authenticated. Redirecting...</p>
+        )}
+        {authError && <p className="text-red-500">Authentication Error: {authError}</p>}
       </main>
     </div>
   );
