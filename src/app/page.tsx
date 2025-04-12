@@ -3,11 +3,23 @@
 import TelegramAuth, {TelegramUserData} from '@/app/auth/telegram-auth';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
+import {Telegram} from '@telegram-apps/sdk-react';
+
+interface HomeProps {
+  tg: Telegram | null;
+}
 
 export default function Home() {
   const [userData, setUserData] = useState<TelegramUserData | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [tg, setTg] = useState<Telegram | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+      setTg(window.Telegram.WebApp);
+    }
+  }, []);
 
   useEffect(() => {
     if (userData) {

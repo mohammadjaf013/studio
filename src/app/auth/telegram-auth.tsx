@@ -1,6 +1,6 @@
 'use client';
 
-import {useTelegram} from '@telegram-apps/sdk-react';
+import {Telegram} from '@telegram-apps/sdk-react';
 import {useState, useEffect} from 'react';
 import {validateTelegramInitData, TelegramUserData} from '@/services/telegram';
 import {useToast} from '@/hooks/use-toast';
@@ -12,11 +12,19 @@ interface TelegramAuthProps {
 }
 
 const TelegramAuth: React.FC<TelegramAuthProps> = ({onAuthSuccess, onAuthError}) => {
-  const {tg} = useTelegram();
+  const [tg, setTg] = useState<Telegram | null>(null);
   const [loading, setLoading] = useState(false);
   const {toast} = useToast();
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+      setTg(window.Telegram.WebApp);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!tg) return;
+
     if (tg.initData === '') {
       toast({
         title: 'Telegram Authentication Error',
@@ -49,7 +57,7 @@ const TelegramAuth: React.FC<TelegramAuthProps> = ({onAuthSuccess, onAuthError})
     };
 
     authenticate();
-  }, [tg.initData, onAuthSuccess, onAuthError, toast]);
+  }, [tg, onAuthSuccess, onAuthError, toast]);
 
   return (
     <div className="flex justify-center items-center h-full">
